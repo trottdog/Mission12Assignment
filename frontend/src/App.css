@@ -6,7 +6,7 @@
 .hero-panel,
 .controls-panel,
 .content-panel {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 1.25rem;
 }
@@ -24,8 +24,15 @@
   padding: 1.25rem;
 }
 
-.eyebrow {
-  margin: 0 0 0.5rem;
+.sidebar-stack {
+  display: grid;
+  gap: 1.5rem;
+  top: 1.5rem;
+}
+
+.eyebrow,
+.section-kicker {
+  margin: 0;
   color: #a16207;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -34,7 +41,7 @@
 }
 
 .summary-card {
-  min-width: 180px;
+  min-width: 220px;
   background: linear-gradient(135deg, #1e3a8a, #2563eb);
   color: white;
   border-radius: 1rem;
@@ -50,6 +57,22 @@
   letter-spacing: 0.08em;
 }
 
+.mission-accordion .accordion-button,
+.mission-accordion .accordion-item {
+  border-radius: 1rem;
+  border: 0;
+}
+
+.mission-accordion .accordion-button:not(.collapsed) {
+  color: #1d4ed8;
+  background: rgba(219, 234, 254, 0.9);
+  box-shadow: none;
+}
+
+.mission-accordion .accordion-body {
+  padding-top: 1rem;
+}
+
 .status-chip {
   min-height: calc(2.25rem + 2px);
   border: 1px solid #dbe4f0;
@@ -63,6 +86,36 @@
   padding: 0.375rem 0.75rem;
 }
 
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.summary-tile {
+  border-radius: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.summary-tile span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.mission-progress {
+  height: 0.8rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.mission-progress .progress-bar {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
 .table th {
   white-space: nowrap;
 }
@@ -71,20 +124,39 @@
   vertical-align: middle;
 }
 
+.cart-total-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
 .pagination-panel {
   display: flex;
   justify-content: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .hero-panel {
     flex-direction: column;
     align-items: stretch;
     padding: 1.5rem;
   }
+}
 
+@media (max-width: 768px) {
   .controls-panel,
   .content-panel {
     padding: 1rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-total-bar {
+    justify-content: space-between;
+    gap: 1rem;
   }
 }

@@ -8,4 +8,5 @@ public class PagedBooksResponse
     public int CurrentPage { get; init; }
     public int PageSize { get; init; }
     public string SortOrder { get; init; } = "title-asc";
+    public string? Category { get; init; }
 }

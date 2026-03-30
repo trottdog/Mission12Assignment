@@ -19,4 +19,5 @@ public class BooksQueryParameters
     }
 
     public string SortOrder { get; set; } = "title-asc";
+    public string? Category { get; set; }
 }

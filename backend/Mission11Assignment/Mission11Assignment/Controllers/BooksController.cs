@@ -14,6 +14,12 @@ public class BooksController(BookstoreContext context) : ControllerBase
     {
         var booksQuery = context.Books.AsNoTracking();
 
+        if (!string.IsNullOrWhiteSpace(queryParameters.Category))
+        {
+            var selectedCategory = queryParameters.Category.Trim();
+            booksQuery = booksQuery.Where(book => book.Category == selectedCategory);
+        }
+
         booksQuery = queryParameters.SortOrder.ToLowerInvariant() switch
         {
             "title-desc" => booksQuery.OrderByDescending(book => book.Title),
@@ -39,7 +45,21 @@ public class BooksController(BookstoreContext context) : ControllerBase
             TotalPages = totalPages,
             CurrentPage = currentPage,
             PageSize = pageSize,
-            SortOrder = queryParameters.SortOrder
+            SortOrder = queryParameters.SortOrder,
+            Category = queryParameters.Category
         });
+    }
+
+    [HttpGet("categories")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetCategories()
+    {
+        var categories = await context.Books
+            .AsNoTracking()
+            .Select(book => book.Category)
+            .Distinct()
+            .OrderBy(category => category)
+            .ToListAsync();
+
+        return Ok(categories);
     }
 }
