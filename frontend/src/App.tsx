@@ -60,6 +60,7 @@ const readSessionValue = <T,>(key: string, fallback: T): T => {
     return fallback
   }
 
+  // Reuse saved session data when the user moves between views.
   const rawValue = window.sessionStorage.getItem(key)
 
   if (!rawValue) {
@@ -101,6 +102,7 @@ function App() {
   const [categoryError, setCategoryError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Save the user's catalog state so Continue Shopping can restore it.
     window.sessionStorage.setItem(
       catalogStorageKey,
       JSON.stringify({
@@ -113,10 +115,12 @@ function App() {
   }, [currentPage, pageSize, selectedCategory, sortOrder])
 
   useEffect(() => {
+    // Keep the cart available for the rest of the browser session.
     window.sessionStorage.setItem(cartStorageKey, JSON.stringify(cart))
   }, [cart])
 
   useEffect(() => {
+    // Remember whether the user was viewing the catalog or the cart.
     window.sessionStorage.setItem(viewStorageKey, JSON.stringify(view))
   }, [view])
 
@@ -183,6 +187,7 @@ function App() {
         const data = (await response.json()) as BooksResponse
         setBooksResponse(data)
 
+        // Sync with the backend in case the requested page is out of range.
         if (data.currentPage !== currentPage) {
           setCurrentPage(data.currentPage)
         }
@@ -236,10 +241,12 @@ function App() {
     setCart((currentCart) => {
       const existingItem = currentCart.find((item) => item.book.bookId === book.bookId)
 
+      // Add a new line item the first time a book is selected.
       if (!existingItem) {
         return [...currentCart, { book, quantity: 1 }]
       }
 
+      // Otherwise just increase the quantity already in the cart.
       return currentCart.map((item) =>
         item.book.bookId === book.bookId
           ? { ...item, quantity: item.quantity + 1 }
@@ -267,6 +274,7 @@ function App() {
   }
 
   const continueShopping = () => {
+    // Return to the saved catalog view instead of resetting the page.
     setView('catalog')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }

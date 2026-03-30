@@ -14,6 +14,7 @@ public class BooksController(BookstoreContext context) : ControllerBase
     {
         var booksQuery = context.Books.AsNoTracking();
 
+        // Filter the catalog before counting pages.
         if (!string.IsNullOrWhiteSpace(queryParameters.Category))
         {
             var selectedCategory = queryParameters.Category.Trim();
@@ -29,6 +30,8 @@ public class BooksController(BookstoreContext context) : ControllerBase
         var totalBooks = await booksQuery.CountAsync();
         var pageSize = queryParameters.PageSize;
         var totalPages = (int)Math.Ceiling(totalBooks / (double)pageSize);
+
+        // Keep the requested page number inside the valid range.
         var currentPage = totalPages == 0
             ? 1
             : Math.Min(Math.Max(queryParameters.PageNumber, 1), totalPages);
@@ -53,6 +56,7 @@ public class BooksController(BookstoreContext context) : ControllerBase
     [HttpGet("categories")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetCategories()
     {
+        // Send back a clean category list for the filter dropdown.
         var categories = await context.Books
             .AsNoTracking()
             .Select(book => book.Category)
