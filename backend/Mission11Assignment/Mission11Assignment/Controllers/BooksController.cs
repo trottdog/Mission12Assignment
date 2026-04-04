@@ -53,6 +53,27 @@ public class BooksController(BookstoreContext context) : ControllerBase
         });
     }
 
+    [HttpGet("all")]
+    public async Task<ActionResult<IReadOnlyList<Book>>> GetAllBooks()
+    {
+        var books = await context.Books
+            .AsNoTracking()
+            .OrderBy(book => book.Title)
+            .ToListAsync();
+
+        return Ok(books);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Book>> GetBook(int id)
+    {
+        var book = await context.Books
+            .AsNoTracking()
+            .FirstOrDefaultAsync(book => book.BookId == id);
+
+        return book is null ? NotFound() : Ok(book);
+    }
+
     [HttpGet("categories")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetCategories()
     {
@@ -65,5 +86,59 @@ public class BooksController(BookstoreContext context) : ControllerBase
             .ToListAsync();
 
         return Ok(categories);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Book>> AddBook([FromBody] Book book)
+    {
+        context.Books.Add(book);
+        await context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetBook), new { id = book.BookId }, book);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateBook(int id, [FromBody] Book updatedBook)
+    {
+        if (id != updatedBook.BookId)
+        {
+            return BadRequest("Book ID does not match the route.");
+        }
+
+        var existingBook = await context.Books.FindAsync(id);
+
+        if (existingBook is null)
+        {
+            return NotFound();
+        }
+
+        existingBook.Title = updatedBook.Title;
+        existingBook.Author = updatedBook.Author;
+        existingBook.Publisher = updatedBook.Publisher;
+        existingBook.ISBN = updatedBook.ISBN;
+        existingBook.Classification = updatedBook.Classification;
+        existingBook.Category = updatedBook.Category;
+        existingBook.PageCount = updatedBook.PageCount;
+        existingBook.Price = updatedBook.Price;
+
+        await context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        var book = await context.Books.FindAsync(id);
+
+        if (book is null)
+        {
+            return NotFound();
+        }
+
+        context.Books.Remove(book);
+        await context.SaveChangesAsync();
+
+        return NoContent();
     }
 }

@@ -4,6 +4,7 @@
 }
 
 .hero-panel,
+.nav-panel,
 .controls-panel,
 .content-panel {
   background: rgba(255, 255, 255, 0.9);
@@ -20,6 +21,7 @@
 }
 
 .controls-panel,
+.nav-panel,
 .content-panel {
   padding: 1.25rem;
 }
@@ -48,6 +50,10 @@
   padding: 1rem 1.25rem;
   display: grid;
   gap: 0.25rem;
+}
+
+.nav-panel {
+  padding-block: 1rem;
 }
 
 .summary-label {
@@ -122,6 +128,11 @@
 
 .table td {
   vertical-align: middle;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.85rem;
 }
 
 .cart-total-bar {
