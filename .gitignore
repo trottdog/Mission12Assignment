@@ -11,8 +11,7 @@ backend/**/obj/
 
 # Logs and env files
 *.log
-.env
-.env.*
+*.env.example
 
 # IDE files
 .idea/
