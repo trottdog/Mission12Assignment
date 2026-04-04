@@ -1,11 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using Mission11Assignment.Data;
+using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var bookstoreConnectionString = builder.Configuration.GetConnectionString("BookstoreConnection")
+var rawConnectionString = builder.Configuration.GetConnectionString("BookstoreConnection")
                                ?? throw new InvalidOperationException("Bookstore connection string is not configured.");
+
+var connectionStringBuilder = new DbConnectionStringBuilder
+{
+    ConnectionString = rawConnectionString
+};
+
+if (connectionStringBuilder.TryGetValue("Data Source", out var dataSourceValue)
+    && dataSourceValue is string dataSource
+    && !string.IsNullOrWhiteSpace(dataSource)
+    && !Path.IsPathRooted(dataSource))
+{
+    connectionStringBuilder["Data Source"] = Path.Combine(builder.Environment.ContentRootPath, dataSource);
+}
+
+var bookstoreConnectionString = connectionStringBuilder.ConnectionString;
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BookstoreContext>(options =>

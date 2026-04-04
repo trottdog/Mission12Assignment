@@ -20,4 +20,11 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="Bookstore.sqlite">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>
