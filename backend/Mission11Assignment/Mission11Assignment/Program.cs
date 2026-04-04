@@ -37,7 +37,8 @@ builder.Services.AddCors(options =>
     {
         policy.SetIsOriginAllowed(origin =>
             allowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase)
-            || origin.EndsWith(".azurestaticapps.net", StringComparison.OrdinalIgnoreCase))
+            || origin.EndsWith(".azurestaticapps.net", StringComparison.OrdinalIgnoreCase)
+            || origin.EndsWith(".trottdog.com", StringComparison.OrdinalIgnoreCase))
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
